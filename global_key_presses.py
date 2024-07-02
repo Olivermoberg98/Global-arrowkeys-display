@@ -1,6 +1,24 @@
+import subprocess
+import sys
+
+# Function to install a package using pip
+def install_package(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# Ensure required packages are installed
+try:
+    from PIL import Image, ImageTk
+except ImportError:
+    install_package('Pillow')
+    from PIL import Image, ImageTk
+
+try:
+    import keyboard
+except ImportError:
+    install_package('keyboard')
+    import keyboard
+
 import tkinter as tk
-from PIL import Image, ImageTk
-import keyboard
 import os
 
 class ArrowKeyDisplay:
@@ -10,8 +28,11 @@ class ArrowKeyDisplay:
         self.root.attributes("-topmost", True)
         self.root.resizable(False, False)
 
+        # Determine the current working directory
+        current_dir = os.getcwd()
+
         # Path to the image folder
-        image_folder = 'Global-arrowkeys-display/arrowkey_images'
+        image_folder = os.path.join(current_dir, 'arrowkey_images')
 
         # Load and resize images
         self.left_unpressed = ImageTk.PhotoImage(Image.open(os.path.join(image_folder, "left_unpressed.png")).resize((100, 100), Image.Resampling.LANCZOS))
